@@ -38,6 +38,32 @@ app.post('/postdemo', (req,res,next) => {
   res.render('postdemopage')
 })
 
+app.get("/rooms", (req,res,next) => {
+  res.locals.rooms = rooms
+  res.render('showrooms');
+})
+
+app.post("/rooms", (req,res,next) => {
+  res.locals.rooms = rooms
+  const id = req.body.id;
+  const uid = req.body.uid;
+  const data = req.body.data;
+  if (id in rooms) {
+    if (uid==""){
+      delete rooms[id]
+    }
+    else if (data=="") {
+      delete rooms[id][uid]
+    } else {
+      rooms[id][uid] = data;
+    }  
+  } else if ((id!="") && (uid!="")){
+    rooms[id] = {};
+    rooms[id][uid] = data;
+  }
+  res.render('showrooms');
+})
+
 app.get("/room", (req,res,next) => {
   const id = req.query.id;
   res.json(rooms[id]);
